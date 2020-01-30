@@ -1,0 +1,12 @@
+version: '3'
+
+services:
+  ruby:
+    build: .
+    volumes:
+      - .:/myapp
+      - bundle:/usr/local/bundle
+    tty: true
+
+volumes:
+  bundle:
