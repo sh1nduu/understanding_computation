@@ -4,6 +4,17 @@ require_relative './node'
 require_relative './reducible'
 require_relative './binary_operator'
 
+class Machine < Struct.new(:expression)
+  def step
+    self.expression = expression.reduce
+  end
+
+  def run
+    step while expression.reducible?
+    expression
+  end
+end
+
 class Number < Struct.new(:value)
   include Node
   include Reducible

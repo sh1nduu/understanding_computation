@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class BinaryOp < Struct.new(:left, :right)
   include Node
   include Reducible
@@ -20,15 +22,19 @@ class BinaryOp < Struct.new(:left, :right)
 
   def reduce
     if left.reducible?
-      self.class.new(left.reduce, right).reduce
+      new_instance(left.reduce, right)
     elsif right.reducible?
-      self.class.new(left, right.reduce).reduce
+      new_instance(left, right.reduce)
     else
       operate
     end
   end
 
   private
+  def new_instance(*args)
+    self.class.new(*args)
+  end
+
   def operate
     raise "Can't reduce different types" unless left.class == right.class
 

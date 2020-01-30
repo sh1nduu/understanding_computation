@@ -8,6 +8,13 @@ Style/Documentation:
 Style/StructInheritance:
   Enabled: false
 
+Style/StringLiterals:
+  EnforcedStyle: single_quotes
+
+# Prefer &&/|| over and/or.
+Style/AndOr:
+  Enabled: true
+
 Metrics/MethodLength:
   CountComments: false
 
@@ -15,10 +22,6 @@ Metrics/BlockLength:
   CountComments: false
   Exclude:
     - spec/**/*
-
-# Prefer &&/|| over and/or.
-Style/AndOr:
-  Enabled: true
 
 # Align `when` with `case`.
 Layout/CaseIndentation:
