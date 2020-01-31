@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
-class BinaryOp < Struct.new(:left, :right)
-  include Node
+class BinaryOp < Node
   include Reducible
+
+  attr_accessor :left, :right
+  def initialize(left, right)
+    self.left = left
+    self.right = right
+  end
 
   class << self
     attr_accessor :operator
@@ -12,12 +17,12 @@ class BinaryOp < Struct.new(:left, :right)
     end
   end
 
-  def to_s
-    "#{left} #{self.class.operator} #{right}"
+  def ==(other)
+    left == other.left && right == other.right && self.class == other.class
   end
 
-  def inspect
-    "«#{self}»"
+  def to_s
+    "#{left} #{self.class.operator} #{right}"
   end
 
   def reduce
@@ -38,6 +43,6 @@ class BinaryOp < Struct.new(:left, :right)
   def operate
     raise "Can't reduce different types" unless left.class == right.class
 
-    Number.new(left.value.public_send(self.class.operator, right.value))
+    reduced_class.new(left.value.public_send(self.class.operator, right.value))
   end
 end

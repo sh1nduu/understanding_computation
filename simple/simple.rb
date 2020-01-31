@@ -2,6 +2,7 @@
 
 require_relative './node'
 require_relative './reducible'
+require_relative './value'
 require_relative './binary_operator'
 
 class Machine < Struct.new(:expression)
@@ -15,23 +16,21 @@ class Machine < Struct.new(:expression)
   end
 end
 
-class Number < Struct.new(:value)
-  include Node
-  include Reducible
+class Number < Value; end
 
-  reducible false
-
-  def to_s
-    value.to_s
-  end
-end
+class Boolean < Value; end
 
 class Add < BinaryOp
   use_symbol :+
-  reducible true
+  reduce_to Number
 end
 
 class Multiply < BinaryOp
   use_symbol :*
-  reducible true
+  reduce_to Number
+end
+
+class LessThan < BinaryOp
+  use_symbol :<
+  reduce_to Boolean
 end

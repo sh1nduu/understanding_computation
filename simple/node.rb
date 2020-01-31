@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Node
+class Node
   def inspect
     "#{self.class.name}(#{self})"
   end

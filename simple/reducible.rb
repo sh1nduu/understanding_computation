@@ -6,17 +6,21 @@ module Reducible
   end
 
   def reducible?
-    self.class._reducible
+    !reduced_class.nil?
   end
 
   def reduce
-    raise NotImplementedError unless reducible?
+    raise NotImplementedError
+  end
+
+  def reduced_class
+    self.class.reduced_class
   end
 
   module ClassMethods
-    attr_accessor :_reducible
-    def reducible(bool)
-      self._reducible = bool
+    attr_accessor :reduced_class
+    def reduce_to(klass)
+      self.reduced_class = klass
     end
   end
 end
