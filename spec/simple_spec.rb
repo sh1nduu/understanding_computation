@@ -104,43 +104,55 @@ RSpec.describe Simple do
       let(:rhs) { Assign.new(:x, Number.new(2)) }
       it { is_expected.to be false }
     end
+
+    context 'when each If have same attributes' do
+      let(:lhs) { If.new(Boolean.new(true), DoNothing.new, Number.new(1)) }
+      let(:rhs) { lhs }
+      it { is_expected.to be true }
+    end
+
+    context 'when each If have different attributes' do
+      let(:lhs) { If.new(Boolean.new(true), DoNothing.new, Number.new(1)) }
+      let(:rhs) { If.new(Boolean.new(false), DoNothing.new, Number.new(1)) }
+      it { is_expected.to be false }
+    end
   end
 
   describe '#to_s' do
-    subject { expression.to_s }
+    subject { node.to_s }
 
     context 'of Number(1)' do
-      let(:expression) { Number.new(1) }
+      let(:node) { Number.new(1) }
       it { is_expected.to eq '1' }
     end
 
     context 'of Boolean(true)' do
-      let(:expression) { Boolean.new(true) }
+      let(:node) { Boolean.new(true) }
       it { is_expected.to eq 'true' }
     end
 
     context 'of Variable(:x)' do
-      let(:expression) { Variable.new(:x) }
+      let(:node) { Variable.new(:x) }
       it { is_expected.to eq 'x' }
     end
 
     context 'of Add(1 + 2)' do
-      let(:expression) { Add.new(Number.new(1), Number.new(2)) }
+      let(:node) { Add.new(Number.new(1), Number.new(2)) }
       it { is_expected.to eq '1 + 2' }
     end
 
     context 'of Multiply(1 * 2)' do
-      let(:expression) { Multiply.new(Number.new(1), Number.new(2)) }
+      let(:node) { Multiply.new(Number.new(1), Number.new(2)) }
       it { is_expected.to eq '1 * 2' }
     end
 
     context 'of LessThan(1 < 2)' do
-      let(:expression) { LessThan.new(Number.new(1), Number.new(2)) }
+      let(:node) { LessThan.new(Number.new(1), Number.new(2)) }
       it { is_expected.to eq '1 < 2' }
     end
 
     context 'of nested(1 * 2 + 3 * 4)' do
-      let(:expression) do
+      let(:node) do
         Add.new(
           Multiply.new(Number.new(1), Number.new(2)),
           Multiply.new(Number.new(3), Number.new(4))
@@ -150,8 +162,13 @@ RSpec.describe Simple do
     end
 
     context 'of Assign(x = 1)' do
-      let(:expression) { Assign.new(:x, Number.new(1)) }
+      let(:node) { Assign.new(:x, Number.new(1)) }
       it { is_expected.to eq 'x = 1' }
+    end
+
+    context 'of If(if (true) { 1 } else { 2 })' do
+      let(:node) { If.new(Boolean.new(true), Number.new(1), Number.new(2)) }
+      it { is_expected.to eq 'if (true) { 1 } else { 2 }' }
     end
   end
 end

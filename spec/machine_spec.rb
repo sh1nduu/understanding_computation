@@ -71,6 +71,18 @@ RSpec.describe Machine do
         let(:environment) { { x: Number.new(1) } }
         it { is_expected.to eq [DoNothing.new, { x: Number.new(2) }] }
       end
+
+      context 'of If(if (true) { 1 } else { 2 })' do
+        let(:statement) do
+          If.new(
+            Boolean.new(true),
+            Assign.new(:x, Add.new(Variable.new(:x), Number.new(1))),
+            Number.new(2)
+          )
+        end
+        let(:environment) { { x: Number.new(1) } }
+        it { is_expected.to eq [DoNothing.new, { x: Number.new(2) }] }
+      end
     end
   end
 end
