@@ -25,11 +25,11 @@ class BinaryOp < Node
     "#{left} #{self.class.operator} #{right}"
   end
 
-  def reduce
+  def reduce(environment)
     if left.reducible?
-      new_instance(left.reduce, right)
+      new_instance(left.reduce(environment), right)
     elsif right.reducible?
-      new_instance(left, right.reduce)
+      new_instance(left, right.reduce(environment))
     else
       operate
     end

@@ -23,6 +23,9 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
 
+Layout/TrailingWhitespace:
+  Enabled: true
+
 # Align `when` with `case`.
 Layout/CaseIndentation:
   Enabled: true
