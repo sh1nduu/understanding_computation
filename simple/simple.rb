@@ -1,66 +1,16 @@
 # frozen_string_literal: true
 
-require_relative './node'
-require_relative './reducible'
-require_relative './value'
-require_relative './binary_operator'
+require_relative './simple/small_step/reducible'
+require_relative './simple/small_step/binary_operator'
+require_relative './simple/small_step/variable'
+require_relative './simple/node'
+require_relative './simple/value'
+require_relative './simple/binary_operator'
+require_relative './simple/variable'
+require_relative './simple/values'
+require_relative './simple/operators'
+require_relative './simple/small_step/machine'
 
-class Machine
-  attr_accessor :expression, :environment
-  def initialize(expression, environment)
-    @expression = expression
-    @environment = environment
-  end
-
-  def step
-    @expression = @expression.reduce(@environment)
-  end
-
-  def run
-    step while @expression.reducible?
-    @expression
-  end
-end
-
-class Number < Value; end
-
-class Boolean < Value; end
-
-class Variable < Node
-  include Reducible
-  reduce_to Value
-
-  attr_accessor :name
-  def initialize(name)
-    @name = name
-  end
-
-  def ==(other)
-    @name == other.name && self.class == other.class
-  end
-
-  def to_s
-    name.to_s
-  end
-
-  def reduce(environment)
-    environment.fetch(name)
-  rescue KeyError
-    raise "Undefined variable #{name}"
-  end
-end
-
-class Add < BinaryOp
-  use_symbol :+
-  reduce_to Number
-end
-
-class Multiply < BinaryOp
-  use_symbol :*
-  reduce_to Number
-end
-
-class LessThan < BinaryOp
-  use_symbol :<
-  reduce_to Boolean
+module Simple
+  include SmallStep
 end
