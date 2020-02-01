@@ -7,6 +7,7 @@ RSpec.describe Reducible do
   let(:add) { Add.new(Number.new(1), Number.new(2)) }
   let(:mul) { Multiply.new(Number.new(1), Number.new(2)) }
   let(:less_than) { LessThan.new(Number.new(1), Number.new(2)) }
+  let(:assign) { Assign.new(:x, Number.new(1)) }
 
   describe '#reducible?' do
     subject { expression.reducible? }
@@ -38,6 +39,11 @@ RSpec.describe Reducible do
 
     context 'of LessThan' do
       let(:expression) { less_than }
+      it { is_expected.to be true }
+    end
+
+    context 'of Assign' do
+      let(:expression) { assign }
       it { is_expected.to be true }
     end
   end
@@ -79,6 +85,12 @@ RSpec.describe Reducible do
     context 'of LessThan(2 < 3)' do
       let(:reducible) { LessThan.new(Number.new(2), Number.new(3)) }
       it { is_expected.to eq Boolean.new(true) }
+    end
+
+    context 'of Assign(x = 1)' do
+      let(:reducible) { Assign.new(:x, Number.new(1)) }
+      let(:environment) { {} }
+      it { is_expected.to eq [DoNothing.new, { x: Number.new(1) }] }
     end
   end
 end

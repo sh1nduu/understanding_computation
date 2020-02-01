@@ -74,6 +74,36 @@ RSpec.describe Simple do
       let(:rhs) { LessThan.new(Number.new(2), Number.new(1)) }
       it { is_expected.to be false }
     end
+
+    context 'when each item are DoNothing' do
+      let(:lhs) { DoNothing.new }
+      let(:rhs) { lhs }
+      it { is_expected.to be true }
+    end
+
+    context 'when compare DoNothing to another type' do
+      let(:lhs) { DoNothing.new }
+      let(:rhs) { Number.new(1) }
+      it { is_expected.to be false }
+    end
+
+    context 'when each Assign have same name and expression' do
+      let(:lhs) { Assign.new(:x, Number.new(1)) }
+      let(:rhs) { lhs }
+      it { is_expected.to be true }
+    end
+
+    context 'when each Assign have different name' do
+      let(:lhs) { Assign.new(:x, Number.new(1)) }
+      let(:rhs) { Assign.new(:y, Number.new(1)) }
+      it { is_expected.to be false }
+    end
+
+    context 'when each Assign have same name but different expression' do
+      let(:lhs) { Assign.new(:x, Number.new(1)) }
+      let(:rhs) { Assign.new(:x, Number.new(2)) }
+      it { is_expected.to be false }
+    end
   end
 
   describe '#to_s' do
@@ -117,6 +147,11 @@ RSpec.describe Simple do
         )
       end
       it { is_expected.to eq '1 * 2 + 3 * 4' }
+    end
+
+    context 'of Assign(x = 1)' do
+      let(:expression) { Assign.new(:x, Number.new(1)) }
+      it { is_expected.to eq 'x = 1' }
     end
   end
 end

@@ -3,19 +3,19 @@
 module Simple
   module SmallStep
     class Machine
-      attr_accessor :expression, :environment
-      def initialize(expression, environment)
-        @expression = expression
+      attr_accessor :statement, :environment
+      def initialize(statement, environment)
+        @statement = statement
         @environment = environment
       end
 
       def step
-        @expression = @expression.reduce(@environment)
+        self.statement, self.environment = statement.reduce(environment)
       end
 
       def run
-        step while @expression.reducible?
-        @expression
+        step while statement.reducible?
+        [statement, environment]
       end
     end
   end
