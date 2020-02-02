@@ -5,15 +5,19 @@ module Simple
     module If
       def reduce(environment)
         if condition.reducible?
-          [self.class.new(condition, consequence, alternative), environment]
-        else
-          case condition
-          when Boolean.new(true)
-            [consequence, environment]
-          when Boolean.new(false)
-            [alternative, environment]
-          end
+          [reduced_if(environment), environment]
+        elsif condition == Boolean.new(true)
+          [consequence, environment]
+        elsif condition == Boolean.new(false)
+          [alternative, environment]
         end
+      end
+
+      private
+      def reduced_if(environment)
+        self.class.new(
+          condition.reduce(environment), consequence, alternative
+        )
       end
     end
   end

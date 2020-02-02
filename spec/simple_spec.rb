@@ -116,6 +116,18 @@ RSpec.describe Simple do
       let(:rhs) { If.new(Boolean.new(false), DoNothing.new, Number.new(1)) }
       it { is_expected.to be false }
     end
+
+    context 'when each Sequence have same statements' do
+      let(:lhs) { Sequence.new(Number.new(1), Number.new(2)) }
+      let(:rhs) { lhs }
+      it { is_expected.to be true }
+    end
+
+    context 'when each Sequence have different statements' do
+      let(:lhs) { Sequence.new(Number.new(1), Number.new(2)) }
+      let(:rhs) { Sequence.new(Number.new(2), Number.new(1)) }
+      it { is_expected.to be false }
+    end
   end
 
   describe '#to_s' do
@@ -169,6 +181,11 @@ RSpec.describe Simple do
     context 'of If(if (true) { 1 } else { 2 })' do
       let(:node) { If.new(Boolean.new(true), Number.new(1), Number.new(2)) }
       it { is_expected.to eq 'if (true) { 1 } else { 2 }' }
+    end
+
+    context 'of Sequence(1; 2)' do
+      let(:node) { Sequence.new(Number.new(1), Number.new(2)) }
+      it { is_expected.to eq '1; 2' }
     end
   end
 end

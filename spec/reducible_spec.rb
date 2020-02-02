@@ -8,6 +8,7 @@ RSpec.describe Reducible do
   let(:mul) { Multiply.new(Number.new(1), Number.new(2)) }
   let(:less_than) { LessThan.new(Number.new(1), Number.new(2)) }
   let(:assign) { Assign.new(:x, Number.new(1)) }
+  let(:sequence) { Sequence.new(DoNothing.new, DoNothing.new) }
 
   describe '#reducible?' do
     subject { expression.reducible? }
@@ -44,6 +45,11 @@ RSpec.describe Reducible do
 
     context 'of Assign' do
       let(:expression) { assign }
+      it { is_expected.to be true }
+    end
+
+    context 'of Sequence' do
+      let(:expression) { sequence }
       it { is_expected.to be true }
     end
   end
@@ -91,6 +97,65 @@ RSpec.describe Reducible do
       let(:reducible) { Assign.new(:x, Number.new(1)) }
       let(:environment) { {} }
       it { is_expected.to eq [DoNothing.new, { x: Number.new(1) }] }
+    end
+
+    context 'of If(if (1 < 2) { 1 } else { 2 } )' do
+      let(:reducible) do
+        If.new(
+          LessThan.new(Number.new(1), Number.new(2)),
+          Number.new(3),
+          Number.new(4)
+        )
+      end
+      let(:environment) { {} }
+      expect = [If.new(Boolean.new(true), Number.new(3), Number.new(4)), {}]
+      it { is_expected.to eq expect }
+    end
+
+    context 'of If(if (true) { 1 } else { 2 } )' do
+      let(:reducible) do
+        If.new(Boolean.new(true), Number.new(1), Number.new(2))
+      end
+      let(:environment) { {} }
+      it { is_expected.to eq [Number.new(1), {}] }
+    end
+
+    context 'of If(if (false) { 1 } else { 2 } )' do
+      let(:reducible) do
+        If.new(Boolean.new(false), Number.new(1), Number.new(2))
+      end
+      let(:environment) { {} }
+      it { is_expected.to eq [Number.new(2), {}] }
+    end
+
+    context 'of Sequence(do-nothing; x = 2)' do
+      let(:reducible) do
+        Sequence.new(
+          DoNothing.new,
+          Assign.new(:x, Number.new(1))
+        )
+      end
+      let(:environment) { {} }
+      it { is_expected.to eq [Assign.new(:x, Number.new(1)), {}] }
+    end
+
+    context 'of Sequence(x = 1; x = 2)' do
+      let(:reducible) do
+        Sequence.new(
+          Assign.new(:x, Number.new(1)),
+          Assign.new(:x, Number.new(2))
+        )
+      end
+      let(:environment) { {} }
+      it do
+        is_expected.to eq [
+          Sequence.new(
+            DoNothing.new,
+            Assign.new(:x, Number.new(2))
+          ),
+          { x: Number.new(1) }
+        ]
+      end
     end
   end
 end
