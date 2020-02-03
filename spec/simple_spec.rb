@@ -128,6 +128,24 @@ RSpec.describe Simple do
       let(:rhs) { Sequence.new(Number.new(2), Number.new(1)) }
       it { is_expected.to be false }
     end
+
+    context 'when each While have same condition and body' do
+      let(:lhs) { While.new(Boolean.new(true), Number.new(1)) }
+      let(:rhs) { lhs }
+      it { is_expected.to be true }
+    end
+
+    context 'when each While have different condition' do
+      let(:lhs) { While.new(Boolean.new(true), Number.new(1)) }
+      let(:rhs) { While.new(Boolean.new(false), Number.new(1)) }
+      it { is_expected.to be false }
+    end
+
+    context 'when each While have different body' do
+      let(:lhs) { While.new(Boolean.new(true), Number.new(1)) }
+      let(:rhs) { While.new(Boolean.new(false), Number.new(2)) }
+      it { is_expected.to be false }
+    end
   end
 
   describe '#to_s' do

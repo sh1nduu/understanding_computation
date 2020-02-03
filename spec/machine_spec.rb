@@ -94,6 +94,17 @@ RSpec.describe Machine do
         let(:environment) { {} }
         it { is_expected.to eq [DoNothing.new, { x: Number.new(2) }] }
       end
+
+      context 'of While(x < 10) { x = x + 1 }' do
+        let(:statement) do
+          While.new(
+            LessThan.new(Variable.new(:x), Number.new(10)),
+            Assign.new(:x, Add.new(Variable.new(:x), Number.new(1)))
+          )
+        end
+        let(:environment) { { x: Number.new(0) } }
+        it { is_expected.to eq [DoNothing.new, { x: Number.new(10) }] }
+      end
     end
   end
 end

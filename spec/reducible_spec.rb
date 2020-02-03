@@ -9,6 +9,7 @@ RSpec.describe Reducible do
   let(:less_than) { LessThan.new(Number.new(1), Number.new(2)) }
   let(:assign) { Assign.new(:x, Number.new(1)) }
   let(:sequence) { Sequence.new(DoNothing.new, DoNothing.new) }
+  let(:while_) { While.new(Boolean.new(true), DoNothing.new) }
 
   describe '#reducible?' do
     subject { expression.reducible? }
@@ -50,6 +51,11 @@ RSpec.describe Reducible do
 
     context 'of Sequence' do
       let(:expression) { sequence }
+      it { is_expected.to be true }
+    end
+
+    context 'of While' do
+      let(:expression) { while_ }
       it { is_expected.to be true }
     end
   end
@@ -154,6 +160,21 @@ RSpec.describe Reducible do
             Assign.new(:x, Number.new(2))
           ),
           { x: Number.new(1) }
+        ]
+      end
+    end
+
+    context 'of While(true) { do-nothing }' do
+      let(:reducible) { While.new(Boolean.new(true), DoNothing.new) }
+      let(:environment) { {} }
+      it do
+        is_expected.to eq [
+          If.new(
+            Boolean.new(true),
+            Sequence.new(DoNothing.new, reducible),
+            DoNothing.new
+          ),
+          {}
         ]
       end
     end
