@@ -1,17 +1,17 @@
 # frozen_string_literal: true
 
 module Simple
-  class Add < BinaryOp
+  class Add < BinaryOperator
     use_symbol :+
     reduce_to Number
   end
 
-  class Multiply < BinaryOp
+  class Multiply < BinaryOperator
     use_symbol :*
     reduce_to Number
   end
 
-  class LessThan < BinaryOp
+  class LessThan < BinaryOperator
     use_symbol :<
     reduce_to Boolean
   end

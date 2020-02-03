@@ -1,24 +1,25 @@
 # frozen_string_literal: true
 
 module Simple
-  module SmallStep
-    module If
-      def reduce(environment)
-        if condition.reducible?
-          [reduced_if(environment), environment]
-        elsif condition == Boolean.new(true)
-          [consequence, environment]
-        elsif condition == Boolean.new(false)
-          [alternative, environment]
-        end
-      end
+  class If
+    include Reducible
+    reduce_to [].class
 
-      private
-      def reduced_if(environment)
-        self.class.new(
-          condition.reduce(environment), consequence, alternative
-        )
+    def reduce(environment)
+      if condition.reducible?
+        [reduced_if(environment), environment]
+      elsif condition == Boolean.new(true)
+        [consequence, environment]
+      elsif condition == Boolean.new(false)
+        [alternative, environment]
       end
+    end
+
+    private
+    def reduced_if(environment)
+      self.class.new(
+        condition.reduce(environment), consequence, alternative
+      )
     end
   end
 end

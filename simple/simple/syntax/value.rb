@@ -2,7 +2,7 @@
 
 module Simple
   class Value < Node
-    include SmallStep::Reducible
+    include Reducible
 
     attr_accessor :value
     def initialize(value)

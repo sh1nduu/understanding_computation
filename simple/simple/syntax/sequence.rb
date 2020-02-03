@@ -2,10 +2,6 @@
 
 module Simple
   class Sequence < Node
-    include SmallStep::Reducible
-    include SmallStep::Sequence
-    reduce_to [].class
-
     attr_accessor :first, :second
     def initialize(first, second)
       @first = first

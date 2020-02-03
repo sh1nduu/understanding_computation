@@ -2,10 +2,6 @@
 
 module Simple
   class If < Node
-    include SmallStep::Reducible
-    include SmallStep::If
-    reduce_to [].class
-
     attr_accessor :condition, :consequence, :alternative
     def initialize(condition, consequence, alternative)
       @condition = condition

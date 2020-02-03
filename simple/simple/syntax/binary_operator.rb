@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
 module Simple
-  class BinaryOp < Node
-    include SmallStep::Reducible
-    include SmallStep::BinaryOperator
-
+  class BinaryOperator < Node
     class << self
       attr_accessor :operator
 

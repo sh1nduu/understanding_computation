@@ -1,30 +1,30 @@
 # frozen_string_literal: true
 
 module Simple
-  module SmallStep
-    module BinaryOperator
-      def reduce(environment)
-        if left.reducible?
-          new_instance(left.reduce(environment), right)
-        elsif right.reducible?
-          new_instance(left, right.reduce(environment))
-        else
-          operate
-        end
-      end
+  class BinaryOperator
+    include Reducible
 
-      private
-      def new_instance(*args)
-        self.class.new(*args)
+    def reduce(environment)
+      if left.reducible?
+        new_instance(left.reduce(environment), right)
+      elsif right.reducible?
+        new_instance(left, right.reduce(environment))
+      else
+        operate
       end
+    end
 
-      def operate
-        raise "Can't reduce different types" unless left.class == right.class
+    private
+    def new_instance(*args)
+      self.class.new(*args)
+    end
 
-        reduced_class.new(
-          left.value.public_send(self.class.operator, right.value)
-        )
-      end
+    def operate
+      raise "Can't reduce different types" unless left.class == right.class
+
+      reduced_class.new(
+        left.value.public_send(self.class.operator, right.value)
+      )
     end
   end
 end
