@@ -2,6 +2,8 @@
 
 module Simple
   class DoNothing
-    include Reducible
+    def evaluate(environment)
+      environment
+    end
   end
 end
